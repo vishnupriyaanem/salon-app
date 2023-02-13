@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "mysalon",
+    "slug": "mysalon",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
