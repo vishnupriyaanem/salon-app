@@ -2,12 +2,9 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import {  StyleSheet, Text, TextInput, View, ScrollView, TouchableWithoutFeedback } from 'react-native';
 
+
 const isValidObjField = (obj) => {
     return Object.values(obj).every(value => value.trim())
-}
-const isValidEmail = (value) => {
-    const regx =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    return regx.test(value)
 }
 const updateError = (error,stateUpdater) => {
     stateUpdater(error);
@@ -16,22 +13,24 @@ const updateError = (error,stateUpdater) => {
     },2500)
 }
 
-function  RegisterForm  ()  {
-    const navigation = useNavigation();
+function  SignUpUserDetailsScreen  ()  {
     const [userInfo, setUserInfo] = useState({
-        email : '',
-        password : '',
-        confirmPassword : ''
+        firstName : '',
+        lastName : '',
+        gender : '',
+        dateOfBirth : ''
     })
+
     const [error, setError] = useState('')
-    const {email, password, confirmPassword } = userInfo
+    const {firstName, lastName, gender, dateOfBirth } = userInfo
     const handleOnTextChange = (value, fieldName) => {
         setUserInfo({...userInfo,[fieldName] : value})
     }
     const [isFocused, setIsFocused] = useState({
-        email: false,
-        password: false,
-        confirmPassword: false,
+        firstName: false,
+        lastName: false,
+        gender: false,
+        dateOfBirth : false
       })
       const handleInputFocus = (textinput) => {
         setIsFocused({
@@ -47,71 +46,70 @@ function  RegisterForm  ()  {
         if(!isValidObjField(userInfo)) {
             return updateError('All Fields are required', setError)
         }
-        if(!isValidEmail(email)) {
-            return updateError('Please provide the valid emailId', setError)
+        if(!firstName.trim()  || firstName.length < 3) {
+            return updateError('first name must be provide and should be greater than 3 characters', setError)
         }
-        if(!password.trim()  || password.length < 8){
-            return updateError('password id less than 8 charcters', setError)
+        if(!lastName.trim()  || lastName.length < 3){
+            return updateError('last name must be provide and should be greater than 3 characters', setError)
         }
-        if(password !== confirmPassword) {
-             return updateError('passwords are not same', setError)
+        if(!dateOfBirth) {
+             return updateError('Date of birth is needed', setError)
         }
         return true
       }
       const submitForm = ()=> {
         if(isValidForm()) {
             console.log(userInfo)
-            navigation.replace('verifyEmailScreen')
-
         }
       }
-
+    
     return (
         <ScrollView>
             <TouchableWithoutFeedback>
         <View style={styles.container}>
-            <View style={{marginBottom : 'auto', marginTop : 100}}>
+            <View style={{marginBottom : 'auto', marginTop : 50}}>
                <Text style={styles.firstHeading}>Salon App</Text>
-            <View style={{marginTop : 30, marginBottom : 55}}>
+            <View style={{marginTop : 30, marginBottom : 30}}>
                 <Text style={{fontSize : 40, fontWeight : 'bold' }}>Create account,</Text>
                 <Text style={{fontSize : 21 }}>Sign up to get started</Text>
             </View>
+            <Text style={{color : '#3F4B8B', fontSize : 20, marginVertical : 20}}>user@gmail.com</Text>
             <View >
                 
                 <TextInput 
-                style={isFocused.email ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
-                onFocus={()=> handleInputFocus('email')}
-                onBlur={()=> handleInputBlur('email')}
-                onChangeText={(value)=>handleOnTextChange(value,'email')}
-                autoCapitalize = 'none'
-                placeholder='Email' />
+                style={isFocused.firstName ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
+                onFocus={()=> handleInputFocus('firstName')}
+                onBlur={()=> handleInputBlur('lastName')}
+                onChangeText={(value)=>handleOnTextChange(value,'firstName')}
+                placeholder='FirstName' />
                 <TextInput 
-                style={isFocused.password ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
-                onFocus={()=> handleInputFocus('password')}
-                onBlur={()=> handleInputBlur('password')}
-                onChangeText={(value)=>handleOnTextChange(value,'password')}
-                placeholder='Password' 
-                secureTextEntry/>
+                style={isFocused.lastName ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
+                onFocus={()=> handleInputFocus('lastName')}
+                onBlur={()=> handleInputBlur('lastName')}
+                onChangeText={(value)=>handleOnTextChange(value,'lastName')}
+                placeholder='LastName' />
                 <TextInput 
-                style={isFocused.confirmPassword ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
-                onFocus={()=> handleInputFocus('confirmPassword')}
-                onBlur={()=> handleInputBlur('confirmPassword')}
-                onChangeText={(value)=>handleOnTextChange(value,'confirmPassword')}
-                placeholder='Password again !'
-                secureTextEntry/>
+                style={isFocused.gender ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
+                onFocus={()=> handleInputFocus('gender')}
+                onBlur={()=> handleInputBlur('gender')}
+                onChangeText={(value)=>handleOnTextChange(value,'gender')}
+                placeholder='Gender'/>
+                <TextInput 
+                style={isFocused.dateOfBirth ? [styles.input, {borderColor : '#3F4B8B'}] : styles.input}  
+                onFocus={()=> handleInputFocus('dateOfBirth')}
+                onBlur={()=> handleInputBlur('dateOfBirth')}
+                onChangeText={(value)=>handleOnTextChange(value,'dateOfBirth')}
+                placeholder='Date of Birth'/>
             </View>
             <View style={styles.button}>
                 <Text 
                 style={{color : 'white', fontSize :17}}
-                onPress={submitForm} >create account</Text>
+                onPress={submitForm} >Save Details</Text>
             </View>
+            <View>
             {error ? <Text style={{color : 'red', fontSize : 15, textAlign : 'center', marginTop : 70}}>{error}</Text> : null}
             </View>
-        <View style = {{marginTop : 155 }}>
-            <Text 
-            style={{fontSize : 17}}>Already have an account? 
-            <Text style={{color : '#3F4B8B',fontSize : 17,textDecorationLine:'underline'}}>Sign in</Text></Text>
-        </View>
+            </View>
         </View>
         </TouchableWithoutFeedback>
         </ScrollView>
@@ -137,12 +135,11 @@ const styles = StyleSheet.create({
     },
     button : {
         height : 55,
-        width : 250,
+        width : 300,
         backgroundColor : '#3F4B8B',
         justifyContent : 'center',
         alignItems : 'center',
         borderRadius : 8,
-        marginLeft : 30,
 
     },
     firstHeading : {
@@ -151,4 +148,4 @@ const styles = StyleSheet.create({
     }
  })
 
-export default RegisterForm;
+export default SignUpUserDetailsScreen;
